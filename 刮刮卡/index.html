@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        canvas {
+            border: 1px solid lightcoral;
+            display: block;
+            margin: 0 auto;
+            background-size: 300px 200px;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas" width="300" height="200"></canvas>
+</body>
+<script type="text/javascript">
+    /*获取元素*/
+    var canvas = document.getElementById('canvas'),
+            ctx = canvas.getContext('2d');
+
+    var w = canvas.width, h = canvas.height;
+
+    /*随机生成奖品*/
+    var awards=["单身狗","滚去敲代码","哈哈哈","白痴","辣鸡"];
+
+    /*随机生成一个索引*/
+    var award=awards[Math.floor(Math.random()*awards.length)];
+
+    /*将奖品绘制在canvas上*/
+    ctx.font='bold 32px sans-serif';/*字体*/
+    ctx.textAlign='center';/*文字居中*/
+    ctx.textBaseline='middle';
+    ctx.fillText(award,w/2,h/2);
+
+    /*将产品信息装换成canvas的背景图 1位最高质量*/
+    var dataURL=canvas.toDataURL('image/png',1);
+    canvas.style.background='url('+dataURL+')';
+    ctx.clearRect(0,0,w,h);
+
+    /*定义canvas蒙版*/
+    ctx.fillStyle="#ddd";
+    ctx.fillRect(0,0,w,h);
+
+    var flag=false;
+    /*鼠标按下事件*/
+    canvas.addEventListener('mousedown',function(){
+        flag=true;
+        /*涂抹去蒙版*/
+        ctx.globalCompositeOperation='destination-out';
+    });
+
+    /*鼠标移动事件*/
+    canvas.addEventListener('mousemove',function(e){
+        if(flag){
+            var x= e.clientX-canvas.offsetLeft;
+            var y= e.clientY-canvas.offsetTop;
+            ctx.beginPath();
+            ctx.fillRect(x,y,30,30);
+            ctx.fill();
+        }
+    });
+
+    /*鼠标提起事件*/
+    canvas.addEventListener('moueseup',function(){
+        flag=false;
+        ctx.globalCompositeOperation="source-over";
+    })
+</script>
+</html>
